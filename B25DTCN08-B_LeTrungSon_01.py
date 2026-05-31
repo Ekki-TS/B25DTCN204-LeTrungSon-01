@@ -1,282 +1,278 @@
-students = [
-    {
-        "id": "SV001",
-        "ten": "Nguyen Van A",
-        "diem_toan": 8.5,
-        "diem_ly": 7.0,
-        "diem_hoa": 9.0,
-        "diem_tb": 8.17,
-        "xep_loai": "Giỏi"
-    }
-]
+import json
+import os
 
-while True:
-    print("\n================= MENU =================")
-    print("1. Hiển thị danh sách sinh viên")
-    print("2. Thêm mới sinh viên")
-    print("3. Cập nhật thông tin sinh viên")
-    print("4. Xóa sinh viên")
-    print("5. Tìm kiếm sinh viên")
-    print("6. Sắp xếp danh sách sinh viên")
-    print("7. Thống kê học lực")
-    print("8. Liệt kê sinh viên có điểm TB cao nhất / thấp nhất")
-    print("9. Phân loại học lực sinh viên")
-    print("10. Thoát")
+DATA_FILE = "data.json"
 
-    choice = input("Nhập lựa chọn của bạn: ").strip()
+def tinh_diem_tb(toan: float, ly: float, hoa: float) -> float:
+    return round((toan + ly + hoa) / 3, 2)
 
-    if choice == "1":
-        if not students:
-            print("Danh sách sinh viên trống.")
-        else:
-            print(f"\n{'Mã SV':<10}{'Tên':<25}{'Điểm TB':<10}{'Xếp loại':<10}")
 
-            for student in students:
-                print(f"{student['id']:<10}{student['ten']:<25}{student['diem_tb']:<10}{student['xep_loai']:<10}")
-
-    elif choice == "2":
-        student_id = input("Nhập mã sinh viên: ").strip()
-
-        is_duplicate = False
-        for s in students:
-            if s["id"] == student_id:
-                is_duplicate = True
-                break
-
-        if is_duplicate:
-            print("Mã sinh viên đã tồn tại!")
-            continue
-
-        name = input("Nhập tên sinh viên: ").strip()
-
-        while True:
-            diem_toan = input("Nhập điểm Toán: ").strip()
-            if diem_toan.replace(".", "", 1).isdigit():
-                diem_toan = float(diem_toan)
-                if 0 <= diem_toan <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        while True:
-            diem_ly = input("Nhập điểm Lý: ").strip()
-            if diem_ly.replace(".", "", 1).isdigit():
-                diem_ly = float(diem_ly)
-                if 0 <= diem_ly <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        while True:
-            diem_hoa = input("Nhập điểm Hóa: ").strip()
-            if diem_hoa.replace(".", "", 1).isdigit():
-                diem_hoa = float(diem_hoa)
-                if 0 <= diem_hoa <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        diem_tb = round((diem_toan + diem_ly + diem_hoa) / 3, 2)
-
-        if diem_tb >= 8:
-            xep_loai = "Giỏi"
-        elif diem_tb >= 7:
-            xep_loai = "Khá"
-        elif diem_tb >= 5:
-            xep_loai = "TB"
-        else:
-            xep_loai = "Yếu"
-
-        students.append({
-            "id": student_id,
-            "ten": name,
-            "diem_toan": diem_toan,
-            "diem_ly": diem_ly,
-            "diem_hoa": diem_hoa,
-            "diem_tb": diem_tb,
-            "xep_loai": xep_loai
-        })
-
-        print("Thêm sinh viên thành công!")
-
-    elif choice == "3":
-        student_id = input("Nhập mã sinh viên cần cập nhật: ").strip()
-
-        student = None
-        for s in students:
-            if s["id"] == student_id:
-                student = s
-                break
-
-        if student is None:
-            print("Không tìm thấy sinh viên.")
-            continue
-
-        new_name = input("Nhập tên mới: ").strip()
-        if new_name:
-            student["ten"] = new_name
-
-        while True:
-            diem_toan = input("Nhập điểm Toán mới: ").strip()
-            if diem_toan.replace(".", "", 1).isdigit():
-                diem_toan = float(diem_toan)
-                if 0 <= diem_toan <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        while True:
-            diem_ly = input("Nhập điểm Lý mới: ").strip()
-            if diem_ly.replace(".", "", 1).isdigit():
-                diem_ly = float(diem_ly)
-                if 0 <= diem_ly <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        while True:
-            diem_hoa = input("Nhập điểm Hóa mới: ").strip()
-            if diem_hoa.replace(".", "", 1).isdigit():
-                diem_hoa = float(diem_hoa)
-                if 0 <= diem_hoa <= 10:
-                    break
-            print("Điểm phải từ 0 đến 10!")
-
-        student["diem_toan"] = diem_toan
-        student["diem_ly"] = diem_ly
-        student["diem_hoa"] = diem_hoa
-
-        diem_tb = round((diem_toan + diem_ly + diem_hoa) / 3, 2)
-        student["diem_tb"] = diem_tb
-
-        if diem_tb >= 8:
-            student["xep_loai"] = "Giỏi"
-        elif diem_tb >= 7:
-            student["xep_loai"] = "Khá"
-        elif diem_tb >= 5:
-            student["xep_loai"] = "TB"
-        else:
-            student["xep_loai"] = "Yếu"
-
-        print("Cập nhật thành công!")
-
-    elif choice == "4":
-        student_id = input("Nhập mã sinh viên cần xóa: ").strip()
-
-        student = None
-        for s in students:
-            if s["id"] == student_id:
-                student = s
-                break
-
-        if student is None:
-            print("Không tìm thấy sinh viên.")
-            continue
-
-        confirm = input("Bạn có chắc muốn xóa? (Y/N): ").upper()
-
-        if confirm == "Y":
-            students.remove(student)
-            print("Đã xóa sinh viên.")
-        else:
-            print("Đã hủy xóa.")
-
-    elif choice == "5":
-        keyword = input("Nhập tên hoặc mã sinh viên cần tìm: ").lower().strip()
-
-        found = False
-
-        for s in students:
-            if keyword in s["id"].lower() or keyword in s["ten"].lower():
-                found = True
-                print("----------------------------")
-                print("Mã SV:", s["id"])
-                print("Tên:", s["ten"])
-                print("Điểm TB:", s["diem_tb"])
-                print("Xếp loại:", s["xep_loai"])
-
-        if not found:
-            print("Không tìm thấy sinh viên.")
-
-    elif choice == "6":
-        print("\n1. Sắp xếp theo điểm TB giảm dần")
-        print("2. Sắp xếp theo tên A-Z")
-
-        sort_choice = input("Chọn kiểu sắp xếp: ").strip()
-
-        if sort_choice == "1":
-            students.sort(
-                key=lambda student: student["diem_tb"],
-                reverse=True
-            )
-            print("Đã sắp xếp theo điểm TB giảm dần.")
-
-        elif sort_choice == "2":
-            students.sort(
-                key=lambda student: student["ten"]
-            )
-            print("Đã sắp xếp theo tên A-Z.")
-
-        else:
-            print("Lựa chọn không hợp lệ.")
-
-    elif choice == "7":
-        gioi = 0
-        kha = 0
-        tb = 0
-        yeu = 0
-
-        for student in students:
-            if student["xep_loai"] == "Giỏi":
-                gioi += 1
-            elif student["xep_loai"] == "Khá":
-                kha += 1
-            elif student["xep_loai"] == "TB":
-                tb += 1
-            else:
-                yeu += 1
-
-        print("\nTHỐNG KÊ HỌC LỰC")
-        print("Giỏi:", gioi)
-        print("Khá:", kha)
-        print("TB:", tb)
-        print("Yếu:", yeu)
-
-    elif choice == "8":
-        if not students:
-            print("Danh sách sinh viên trống.")
-            continue
-
-        max_tb = max(students, key=lambda student: student["diem_tb"])["diem_tb"]
-        min_tb = min(students, key=lambda student: student["diem_tb"])["diem_tb"]
-
-        print("\nSinh viên có điểm TB cao nhất:")
-        for student in students:
-            if student["diem_tb"] == max_tb:
-                print(
-                    f"{student['id']} | "
-                    f"{student['ten']} | "
-                    f"{student['diem_tb']}"
-                )
-
-        print("\nSinh viên có điểm TB thấp nhất:")
-        for student in students:
-            if student["diem_tb"] == min_tb:
-                print(
-                    f"{student['id']} | "
-                    f"{student['ten']} | "
-                    f"{student['diem_tb']}"
-                )
-
-    elif choice == "9":
-        print("\nPHÂN LOẠI HỌC LỰC")
-
-        for student in students:
-            print(
-                f"{student['id']} | "
-                f"{student['ten']} | "
-                f"{student['diem_tb']} | "
-                f"{student['xep_loai']}"
-            )
-
-    elif choice == "10":
-        print("Thoát chương trình!")
-        break
-
+def xep_loai_hoc_luc(diem_tb: float) -> str:
+    if diem_tb >= 8.0:
+        return "Giỏi"
+    elif diem_tb >= 7.0:
+        return "Khá"
+    elif diem_tb >= 5.0:
+        return "Trung Bình"
     else:
-        print("Lựa chọn không hợp lệ.")
+        return "Yếu"
+
+
+def doc_du_lieu() -> list:
+    if not os.path.exists(DATA_FILE):
+        return []
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def luu_du_lieu(ds: list) -> None:
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(ds, f, ensure_ascii=False, indent=4)
+
+
+def in_bang(ds: list) -> None:
+    if not ds:
+        print("  [Danh sách trống]")
+        return
+    header = (f"{'Mã SV':<8} {'Tên':<22} {'Toán':>6} {'Lý':>6} "
+              f"{'Hóa':>6} {'Điểm TB':>8} {'Xếp loại':<12}")
+    print("-" * len(header))
+    print(header)
+    print("-" * len(header))
+    for sv in ds:
+        print(
+            f"{sv['ma_sv']:<8} {sv['ten']:<22} {sv['diem_toan']:>6.1f} "
+            f"{sv['diem_ly']:>6.1f} {sv['diem_hoa']:>6.1f} "
+            f"{sv['diem_tb']:>8.2f} {sv['xep_loai']:<12}"
+        )
+    print("-" * len(header))
+
+
+def nhap_diem(nhan: str) -> float:
+    while True:
+        try:
+            val = float(input(nhan))
+            if 0 <= val <= 10:
+                return round(val, 1)
+            print("  Điểm phải trong khoảng 0 – 10. Vui lòng nhập lại.")
+        except ValueError:
+            print("  Vui lòng nhập số hợp lệ.")
+
+def hien_thi_danh_sach(ds: list) -> None:
+    print("\n===== DANH SÁCH SINH VIÊN =====")
+    in_bang(ds)
+
+def them_sinh_vien(ds: list) -> None:
+    print("\n===== THÊM MỚI SINH VIÊN =====")
+    ma_sv = input("Nhập mã sinh viên: ").strip().upper()
+    if not ma_sv:
+        print("  Mã sinh viên không được để trống.")
+        return
+    if any(sv["ma_sv"] == ma_sv for sv in ds):
+        print(f"  Mã '{ma_sv}' đã tồn tại. Vui lòng nhập mã khác.")
+        return
+
+    ten = input("Nhập tên sinh viên: ").strip()
+    if not ten:
+        print("  Tên sinh viên không được để trống.")
+        return
+
+    diem_toan = nhap_diem("Điểm Toán (0-10): ")
+    diem_ly   = nhap_diem("Điểm Lý   (0-10): ")
+    diem_hoa  = nhap_diem("Điểm Hóa  (0-10): ")
+
+    diem_tb  = tinh_diem_tb(diem_toan, diem_ly, diem_hoa)
+    xep_loai = xep_loai_hoc_luc(diem_tb)
+
+    sv = {
+        "ma_sv": ma_sv,
+        "ten": ten,
+        "diem_toan": diem_toan,
+        "diem_ly": diem_ly,
+        "diem_hoa": diem_hoa,
+        "diem_tb": diem_tb,
+        "xep_loai": xep_loai,
+    }
+    ds.append(sv)
+    luu_du_lieu(ds)
+    print(f"\n  Đã thêm sinh viên '{ten}' | ĐTB: {diem_tb} | Xếp loại: {xep_loai}")
+
+def cap_nhat_sinh_vien(ds: list) -> None:
+    print("\n===== CẬP NHẬT SINH VIÊN =====")
+    ma_sv = input("Nhập mã sinh viên cần cập nhật: ").strip().upper()
+    for sv in ds:
+        if sv["ma_sv"] == ma_sv:
+            print(f"  Tìm thấy: {sv['ten']} | Toán: {sv['diem_toan']} | Lý: {sv['diem_ly']} | Hóa: {sv['diem_hoa']}")
+            diem_toan = nhap_diem("Điểm Toán mới (0-10): ")
+            diem_ly   = nhap_diem("Điểm Lý   mới (0-10): ")
+            diem_hoa  = nhap_diem("Điểm Hóa  mới (0-10): ")
+            sv["diem_toan"] = diem_toan
+            sv["diem_ly"]   = diem_ly
+            sv["diem_hoa"]  = diem_hoa
+            sv["diem_tb"]   = tinh_diem_tb(diem_toan, diem_ly, diem_hoa)
+            sv["xep_loai"]  = xep_loai_hoc_luc(sv["diem_tb"])
+            luu_du_lieu(ds)
+            print(f"  Cập nhật thành công! ĐTB mới: {sv['diem_tb']} | Xếp loại: {sv['xep_loai']}")
+            return
+    print(f"  Không tìm thấy sinh viên với mã '{ma_sv}'.")
+
+def xoa_sinh_vien(ds: list) -> None:
+    print("\n===== XÓA SINH VIÊN =====")
+    ma_sv = input("Nhập mã sinh viên cần xóa: ").strip().upper()
+    for i, sv in enumerate(ds):
+        if sv["ma_sv"] == ma_sv:
+            xac_nhan = input(f"  Bạn có chắc muốn xóa '{sv['ten']}' (y/n)? ").strip().lower()
+            if xac_nhan == "y":
+                ds.pop(i)
+                luu_du_lieu(ds)
+                print("  Đã xóa thành công.")
+            else:
+                print("  Hủy thao tác xóa.")
+            return
+    print(f"  Không tìm thấy sinh viên với mã '{ma_sv}'.")
+
+def tim_kiem_sinh_vien(ds: list) -> None:
+    print("\n===== TÌM KIẾM SINH VIÊN =====")
+    print("1. Tìm theo tên (gần đúng)")
+    print("2. Tìm theo mã sinh viên")
+    lua_chon = input("Chọn (1/2): ").strip()
+
+    if lua_chon == "1":
+        tu_khoa = input("Nhập tên cần tìm: ").strip().lower()
+        ket_qua = [sv for sv in ds if tu_khoa in sv["ten"].lower()]
+    elif lua_chon == "2":
+        ma_sv = input("Nhập mã sinh viên: ").strip().upper()
+        ket_qua = [sv for sv in ds if sv["ma_sv"] == ma_sv]
+    else:
+        print("  Lựa chọn không hợp lệ.")
+        return
+
+    if ket_qua:
+        print(f"\n  Tìm thấy {len(ket_qua)} kết quả:")
+        in_bang(ket_qua)
+    else:
+        print("  Không tìm thấy kết quả phù hợp.")
+
+def sap_xep_sinh_vien(ds: list) -> None:
+    print("\n===== SẮP XẾP DANH SÁCH =====")
+    print("1. Sắp xếp theo Điểm TB (giảm dần)")
+    print("2. Sắp xếp theo Tên (A-Z tăng dần)")
+    lua_chon = input("Chọn (1/2): ").strip()
+
+    if lua_chon == "1":
+        ds_sx = sorted(ds, key=lambda sv: sv["diem_tb"], reverse=True)
+        print("\n  Danh sách sau khi sắp xếp theo Điểm TB (giảm dần):")
+    elif lua_chon == "2":
+        ds_sx = sorted(ds, key=lambda sv: sv["ten"].lower())
+        print("\n  Danh sách sau khi sắp xếp theo Tên (A-Z):")
+    else:
+        print("  Lựa chọn không hợp lệ.")
+        return
+
+    in_bang(ds_sx)
+
+def thong_ke_diem_tb(ds: list) -> None:
+    print("\n===== THỐNG KÊ ĐIỂM TRUNG BÌNH =====")
+    if not ds:
+        print("  [Danh sách trống]")
+        return
+
+    cac_loai = ["Giỏi", "Khá", "Trung Bình", "Yếu"]
+    tong = len(ds)
+    for loai in cac_loai:
+        so_luong = sum(1 for sv in ds if sv["xep_loai"] == loai)
+        phan_tram = (so_luong / tong * 100) if tong > 0 else 0
+        print(f"  {loai:<12}: {so_luong:>3} sinh viên ({phan_tram:.1f}%)")
+    print(f"  {'Tổng':<12}: {tong:>3} sinh viên")
+
+def cao_nhat_thap_nhat(ds: list) -> None:
+    print("\n===== SINH VIÊN CÓ ĐIỂM TB CAO NHẤT / THẤP NHẤT =====")
+    if not ds:
+        print("  [Danh sách trống]")
+        return
+
+    diem_cao = max(sv["diem_tb"] for sv in ds)
+    diem_thap = min(sv["diem_tb"] for sv in ds)
+
+    ds_cao  = [sv for sv in ds if sv["diem_tb"] == diem_cao]
+    ds_thap = [sv for sv in ds if sv["diem_tb"] == diem_thap]
+
+    print(f"\n  Điểm TB cao nhất ({diem_cao}):")
+    in_bang(ds_cao)
+
+    print(f"\n  Điểm TB thấp nhất ({diem_thap}):")
+    in_bang(ds_thap)
+
+def phan_loai_hoc_luc(ds: list) -> None:
+    print("\n===== PHÂN LOẠI HỌC LỰC SINH VIÊN =====")
+    if not ds:
+        print("  [Danh sách trống]")
+        return
+
+    cac_loai = [
+        ("Giỏi",       "ĐTB >= 8.0"),
+        ("Khá",        "7.0 <= ĐTB < 8.0"),
+        ("Trung Bình", "5.0 <= ĐTB < 7.0"),
+        ("Yếu",        "ĐTB < 5.0"),
+    ]
+
+    for ten_loai, mo_ta in cac_loai:
+        nhom = [sv for sv in ds if sv["xep_loai"] == ten_loai]
+        print(f"\n  {ten_loai} ({mo_ta}) – {len(nhom)} sinh viên:")
+        if nhom:
+            in_bang(nhom)
+        else:
+            print("    [Không có sinh viên]")
+
+def hien_thi_menu() -> None:
+    print("\n" + "=" * 48)
+    print("      QUẢN LÝ SINH VIÊN – HACKATHON 01")
+    print("=" * 48)
+    print("  1. Hiển thị danh sách sinh viên")
+    print("  2. Thêm mới sinh viên")
+    print("  3. Cập nhật thông tin sinh viên")
+    print("  4. Xóa sinh viên")
+    print("  5. Tìm kiếm sinh viên")
+    print("  6. Sắp xếp danh sách sinh viên")
+    print("  7. Thống kê điểm trung bình")
+    print("  8. Sinh viên điểm TB cao nhất / thấp nhất")
+    print("  9. Phân loại học lực sinh viên")
+    print("  0. Thoát")
+    print("=" * 48)
+
+
+def main() -> None:
+    ds = doc_du_lieu()
+    print("Đã nạp dữ liệu từ", DATA_FILE if os.path.exists(DATA_FILE) else "(mới tạo)")
+
+    while True:
+        hien_thi_menu()
+        lua_chon = input("  Chọn chức năng: ").strip()
+
+        if lua_chon == "1":
+            hien_thi_danh_sach(ds)
+        elif lua_chon == "2":
+            them_sinh_vien(ds)
+        elif lua_chon == "3":
+            cap_nhat_sinh_vien(ds)
+        elif lua_chon == "4":
+            xoa_sinh_vien(ds)
+        elif lua_chon == "5":
+            tim_kiem_sinh_vien(ds)
+        elif lua_chon == "6":
+            sap_xep_sinh_vien(ds)
+        elif lua_chon == "7":
+            thong_ke_diem_tb(ds)
+        elif lua_chon == "8":
+            cao_nhat_thap_nhat(ds)
+        elif lua_chon == "9":
+            phan_loai_hoc_luc(ds)
+        elif lua_chon == "0":
+            print("\n  Cảm ơn! Hẹn gặp lại. \n")
+            break
+        else:
+            print("  Lựa chọn không hợp lệ. Vui lòng chọn lại.")
+
+
+if __name__ == "__main__":
+    main()
