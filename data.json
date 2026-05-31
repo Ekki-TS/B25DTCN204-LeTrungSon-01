@@ -1,0 +1,47 @@
+[
+    {
+        "ma_sv": "SV001",
+        "ten": "Nguyễn Văn An",
+        "diem_toan": 9.0,
+        "diem_ly": 8.5,
+        "diem_hoa": 8.0,
+        "diem_tb": 8.5,
+        "xep_loai": "Giỏi"
+    },
+    {
+        "ma_sv": "SV002",
+        "ten": "Trần Thị Bình",
+        "diem_toan": 7.0,
+        "diem_ly": 7.5,
+        "diem_hoa": 7.0,
+        "diem_tb": 7.17,
+        "xep_loai": "Khá"
+    },
+    {
+        "ma_sv": "SV003",
+        "ten": "Lê Quốc Cường",
+        "diem_toan": 5.5,
+        "diem_ly": 6.0,
+        "diem_hoa": 5.0,
+        "diem_tb": 5.5,
+        "xep_loai": "Trung Bình"
+    },
+    {
+        "ma_sv": "SV004",
+        "ten": "Phạm Thị Dung",
+        "diem_toan": 3.5,
+        "diem_ly": 4.0,
+        "diem_hoa": 4.5,
+        "diem_tb": 4.0,
+        "xep_loai": "Yếu"
+    },
+    {
+        "ma_sv": "SV005",
+        "ten": "Hoàng Minh Em",
+        "diem_toan": 8.0,
+        "diem_ly": 9.0,
+        "diem_hoa": 9.5,
+        "diem_tb": 8.83,
+        "xep_loai": "Giỏi"
+    }
+]
